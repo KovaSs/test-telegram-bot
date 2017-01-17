@@ -49,7 +49,7 @@ bot.on('message', (msg) => {
   }
 
   if (msg.location) {
-    console.log('location', msg.location)
+    helpers.getCinemasInCord(chatId, msg.location)
   }
 })
 
