@@ -52,6 +52,22 @@ const helpers = {
       })
     })
   },
+  /** Получение кинотеатра по UUID */
+  getFilmByUuid(chatId, cinemaId) { 
+    models.Cinema.findOne({ uuid: cinemaId }).then( cinema => {
+      bot.sendMessage(chatId, `Кинотеатр ${cinema.name}`, {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: cinema.name, url: cinema.url },
+              { text: 'Показать на карте', callback_data: cinema.uuid },
+            ],
+            [{ text: 'Показать фильмы', callback_data: JSON.stringify(cinema.films) }],
+          ]
+        }
+      })
+    })
+  },
   /** Получение кинотеатров по координатам */
   getCinemasInCord(chatId, location) {
     models.Cinema.find({}).then(cinemas => {

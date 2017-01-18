@@ -32,15 +32,15 @@ bot.on('message', (msg) => {
         reply_markup: { keyboard: keyboard.cinemas }
       })
       break;
-      case kb.film.action:
-        helpers.sendsFilmsByQuery(chatId, { type: 'action' });
-        break;
-      case kb.film.comedy:
-        helpers.sendsFilmsByQuery(chatId, { type: 'comedy' });
-        break;
-      case kb.film.random:
-        helpers.sendsFilmsByQuery(chatId, {});
-        break;
+    case kb.film.action:
+      helpers.sendsFilmsByQuery(chatId, { type: 'action' });
+      break;
+    case kb.film.comedy:
+      helpers.sendsFilmsByQuery(chatId, { type: 'comedy' });
+      break;
+    case kb.film.random:
+      helpers.sendsFilmsByQuery(chatId, {});
+      break;
     case kb.back:
       bot.sendMessage(chatId, 'Что хотите посмотреть?', {
         reply_markup: { keyboard: keyboard.home }
@@ -65,4 +65,10 @@ bot.onText(/\/f(.+)/, (msg, [source, match]) => {
   const chatId = helpers.getMessageChatId(msg);
   const filmId = helpers.getItemUUid(source);
   helpers.getFilmByUuid(chatId, filmId);
+})
+
+bot.onText(/\/c(.+)/, (msg, [source, match]) => {
+  const chatId = helpers.getMessageChatId(msg);
+  const cinemaId = helpers.getItemUUid(source);
+  helpers.getFilmByUuid(chatId, cinemaId);
 })
