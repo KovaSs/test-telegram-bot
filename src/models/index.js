@@ -1,5 +1,6 @@
 const Film = require('./film.model')
 const Cinema = require('./cinema.model')
+const User = require('./user.model')
 
 // Saving data in mongodb server from db.json
 // const db = require('../../db.json')
@@ -9,4 +10,5 @@ const Cinema = require('./cinema.model')
 module.exports = {
   Film,
   Cinema,
+  User,
 }
