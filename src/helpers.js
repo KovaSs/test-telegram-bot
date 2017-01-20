@@ -1,10 +1,19 @@
 const geolib = require('geolib')
 const models = require('./models')
 const keyboard = require('./keyboard')
+const { ACTION_TYPE } = require('./constants')
 const bot = require('./bot')
 const { sortBy } = require('lodash')
 
 const helpers = {
+  /** Преобразование данных в строку  */
+  stringifyData(data) {
+    return JSON.stringify(data);
+  },
+  /** Преобразование данных из строки  */
+  parseData(data) {
+    return JSON.parse(data);
+  },
   /** Получение chat.id при запросе  */
   getMessageChatId(msg) {
     return msg.chat.id;
@@ -43,8 +52,14 @@ const helpers = {
         reply_markup: {
           inline_keyboard: [
             [
-              { text: 'Добавить в избранное', callback_data: film.uuid },
-              { text: 'Показать кинотеатры', callback_data: film.uuid },
+              { 
+                text: 'Добавить в избранное', 
+                callback_data: this.stringifyData({ type: ACTION_TYPE.TOGGLE_FAV_FILMS, filmUuid: film.uuid})
+              },
+              { 
+                text: 'Показать кинотеатры', 
+                callback_data: this.stringifyData({ type: ACTION_TYPE.SHOW_CINEMAS, cinemaUuids: film.cinemas})
+              },
             ],
             [{ text: `Кинопоиск: ${film.name}`, url: film.link }],
           ]
@@ -53,16 +68,29 @@ const helpers = {
     })
   },
   /** Получение кинотеатра по UUID */
-  getFilmByUuid(chatId, cinemaId) { 
+  getCinemaByUuid(chatId, cinemaId) { 
     models.Cinema.findOne({ uuid: cinemaId }).then( cinema => {
       bot.sendMessage(chatId, `Кинотеатр ${cinema.name}`, {
         reply_markup: {
           inline_keyboard: [
             [
               { text: cinema.name, url: cinema.url },
-              { text: 'Показать на карте', callback_data: cinema.uuid },
+              { 
+                text: 'Показать на карте', 
+                callback_data: this.stringifyData({ 
+                  type: ACTION_TYPE.SHOW_CINEMAS_MAP,
+                  lat: film.location.latitude,
+                  lot: film.location.longitude,
+                })
+              },
             ],
-            [{ text: 'Показать фильмы', callback_data: JSON.stringify(cinema.films) }],
+            [{ 
+              text: 'Показать фильмы', 
+              callback_data: this.stringifyData({
+                type: ACTION_TYPE.SHOW_FILMS,
+                filmsUuid: cinema.films,
+              })
+            }],
           ]
         }
       })

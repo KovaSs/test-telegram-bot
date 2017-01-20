@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const config = require('./config')
 const helpers = require('./helpers')
 const keyboard = require('./keyboard')
+const { ACTION_TYPE } = require('./constants')
 const kb = require('./keyboard-btns')
 const bot = require('./bot')
 
@@ -53,6 +54,24 @@ bot.on('message', (msg) => {
   }
 })
 
+bot.on('callback_query', ({ data }) => {
+  const action = helpers.parseData(data)
+  switch (action.type) {
+    case ACTION_TYPE.SHOW_CINEMAS:
+      console.log('SHOW_CINEMAS', action)
+      break;
+    case ACTION_TYPE.SHOW_CINEMAS_MAP:
+      console.log('SHOW_CINEMAS_MAP', action)
+      break;
+    case ACTION_TYPE.TOGGLE_FAV_FILMS:
+      console.log('TOGGLE_FAV_FILMS', action)
+      break;
+    case ACTION_TYPE.SHOW_FILMS:
+      console.log('SHOW_FILMS', action)
+      break;
+  }
+})
+
 bot.onText(/\/start/, (msg) => {
   const chatId = helpers.getMessageChatId(msg);
   const text = `Здравствуйте, ${msg.from.first_name}\nВыберите команду для начала работы:`
@@ -70,5 +89,5 @@ bot.onText(/\/f(.+)/, (msg, [source, match]) => {
 bot.onText(/\/c(.+)/, (msg, [source, match]) => {
   const chatId = helpers.getMessageChatId(msg);
   const cinemaId = helpers.getItemUUid(source);
-  helpers.getFilmByUuid(chatId, cinemaId);
+  helpers.getCinemaByUuid(chatId, cinemaId);
 })
