@@ -81,9 +81,8 @@ bot.onText(/\/start/, (msg) => {
 })
 
 bot.onText(/\/f(.+)/, (msg, [source, match]) => {
-  const chatId = helpers.getMessageChatId(msg);
   const filmId = helpers.getItemUUid(source);
-  helpers.getFilmByUuid(chatId, filmId);
+  helpers.getFilmByUuid(msg, filmId);
 })
 
 bot.onText(/\/c(.+)/, (msg, [source, match]) => {

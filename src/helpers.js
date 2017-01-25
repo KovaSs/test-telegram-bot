@@ -18,6 +18,10 @@ const helpers = {
   getMessageChatId(msg) {
     return msg.chat.id;
   },
+  /** Получение chat.id при запросе  */
+  getMsgTelegramId(msg) {
+    return msg.from.id;
+  },
   /** Отправка фильпов по поисковым параметрам */
   sendsFilmsByQuery(chatId, query) {
     models.Film.find(query).then(films => {
@@ -33,12 +37,19 @@ const helpers = {
     }
     return bot.sendMessage(chatId, html, options);
   },
+  /** Поиск юзера по chatId */
+  getUser(telegramId) {
+    models.User.findOne({ telegramId })
+  },
   /** Получение UUID */
   getItemUUid(sorce) {
     return sorce.substr(2, sorce.length);
   },
   /** Получение фильна по UUID */
-  getFilmByUuid(chatId, filmId) { 
+  getFilmByUuid(msg, filmId) {
+    const chatId = this.getMessageChatId(msg);
+    const telegramId = this.getMsgTelegramId(msg);
+
     models.Film.findOne({ uuid: filmId }).then( film => {
       const caption = 
         `Название: ${film.name}\n` + 
