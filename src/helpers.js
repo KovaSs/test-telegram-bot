@@ -37,46 +37,86 @@ const helpers = {
     }
     return bot.sendMessage(chatId, html, options);
   },
-  /** Поиск юзера по chatId */
+  /** Поиск юзера по telegramId */
   getUser(telegramId) {
-    models.User.findOne({ telegramId })
+    return models.User.findOne({ telegramId })
+  },
+  /** Поиск фильма по chatId */
+  getFilm(filmId) {
+    return models.Film.findOne({ uuid: filmId })
   },
   /** Получение UUID */
   getItemUUid(sorce) {
     return sorce.substr(2, sorce.length);
+  },
+  /** Добавление или удаление фильма в избранное */
+  toggleFavoriteFilm(userId, queryId, { filmUuid, isFav }) {
+    let userPromise;
+    this.getUser(userId).then(user => {
+      if (user) {
+        if (isFav) {
+          user.films = user.films.filter(fUuid => fUuid !== filmUuid);
+        } else {
+          user.films.push(filmUuid);
+        }
+        userPromise = user;
+      } else {
+        userPromise = new models.User({ telegramId: userId, films: [filmUuid]});
+      }
+      userPromise.save().then(() => {
+        const answerText = isFav ? 'Удалено' : 'Добавлено';
+        bot.answerCallbackQuery(queryId, { text: answerText })
+      })
+    })
   },
   /** Получение фильна по UUID */
   getFilmByUuid(msg, filmId) {
     const chatId = this.getMessageChatId(msg);
     const telegramId = this.getMsgTelegramId(msg);
 
-    models.Film.findOne({ uuid: filmId }).then( film => {
-      const caption = 
+    Promise.all([
+      this.getUser(telegramId),
+      this.getFilm(filmId)
+    ])
+      .then(([user, film])=> {
+        let isFav = false;
+
+        if(user) {
+          isFav = user.films.indexOf(film.uuid) !== -1;
+        }
+
+        const isFavText = isFav ? 'Удалить из избранного' : 'Добавить в избранное';
+
+        const caption = 
         `Название: ${film.name}\n` + 
         `Год: ${film.year}\n` +
         `Рейтинг: ${film.rate}\n` +
         `Длительность: ${film.length}\n` +
         `Страна: ${film.country}\n`;
 
-      bot.sendPhoto(chatId, film.picture, {
-        caption,
-        reply_markup: {
-          inline_keyboard: [
-            [
-              { 
-                text: 'Добавить в избранное', 
-                callback_data: this.stringifyData({ type: ACTION_TYPE.TOGGLE_FAV_FILMS, filmUuid: film.uuid})
-              },
-              { 
-                text: 'Показать кинотеатры', 
-                callback_data: this.stringifyData({ type: ACTION_TYPE.SHOW_CINEMAS, cinemaUuids: film.cinemas})
-              },
-            ],
-            [{ text: `Кинопоиск: ${film.name}`, url: film.link }],
-          ]
-        }
+        bot.sendPhoto(chatId, film.picture, {
+          caption,
+          reply_markup: {
+            inline_keyboard: [
+              [
+                { 
+                  text: isFavText, 
+                  callback_data: this.stringifyData({
+                    type: ACTION_TYPE.TOGGLE_FAV_FILMS,
+                    filmUuid: film.uuid,
+                    isFav
+                  })
+                },
+                { 
+                  text: 'Показать кинотеатры', 
+                  callback_data: this.stringifyData({ type: ACTION_TYPE.SHOW_CINEMAS, cinemaUuids: film.cinemas})
+                },
+              ],
+              [{ text: `Кинопоиск: ${film.name}`, url: film.link }],
+            ]
+          }
+        })
       })
-    })
   },
   /** Получение кинотеатра по UUID */
   getCinemaByUuid(chatId, cinemaId) { 

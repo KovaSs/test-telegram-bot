@@ -20,6 +20,7 @@ mongoose.connect(config.DB_URL, {
 bot.on('message', (msg) => {
   const chatId = helpers.getMessageChatId(msg);
   console.log('message', chatId, msg.text)
+
   switch (msg.text) {
     case kb.home.films:
       bot.sendMessage(chatId, 'Выберите жанр', {
@@ -54,8 +55,9 @@ bot.on('message', (msg) => {
   }
 })
 
-bot.on('callback_query', ({ data }) => {
-  const action = helpers.parseData(data)
+bot.on('callback_query', (query) => {
+  const action = helpers.parseData(query.data)
+
   switch (action.type) {
     case ACTION_TYPE.SHOW_CINEMAS:
       console.log('SHOW_CINEMAS', action)
@@ -64,7 +66,7 @@ bot.on('callback_query', ({ data }) => {
       console.log('SHOW_CINEMAS_MAP', action)
       break;
     case ACTION_TYPE.TOGGLE_FAV_FILMS:
-      console.log('TOGGLE_FAV_FILMS', action)
+      helpers.toggleFavoriteFilm(query.from.id, query.id, action)
       break;
     case ACTION_TYPE.SHOW_FILMS:
       console.log('SHOW_FILMS', action)
@@ -80,12 +82,12 @@ bot.onText(/\/start/, (msg) => {
   })
 })
 
-bot.onText(/\/f(.+)/, (msg, [source, match]) => {
+bot.onText(/\/f(.+)/, (msg, [source]) => {
   const filmId = helpers.getItemUUid(source);
   helpers.getFilmByUuid(msg, filmId);
 })
 
-bot.onText(/\/c(.+)/, (msg, [source, match]) => {
+bot.onText(/\/c(.+)/, (msg, [source]) => {
   const chatId = helpers.getMessageChatId(msg);
   const cinemaId = helpers.getItemUUid(source);
   helpers.getCinemaByUuid(chatId, cinemaId);
