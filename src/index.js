@@ -19,15 +19,17 @@ mongoose.connect(config.DB_URL, {
 
 bot.on('message', (msg) => {
   const chatId = helpers.getMessageChatId(msg);
+  const userId = helpers.getMsgTelegramId(msg);
   console.log('message', chatId, msg.text)
 
   switch (msg.text) {
+    case kb.home.favourite:
+      helpers.showFavouriteFilms(chatId, userId)
+      break;
     case kb.home.films:
       bot.sendMessage(chatId, 'Выберите жанр', {
         reply_markup: { keyboard: keyboard.films }
       })
-      break;
-    case kb.home.favorite:
       break;
     case kb.home.cinemas:
       bot.sendMessage(chatId, 'Отправьте местоположение', {
@@ -66,7 +68,7 @@ bot.on('callback_query', (query) => {
       console.log('SHOW_CINEMAS_MAP', action)
       break;
     case ACTION_TYPE.TOGGLE_FAV_FILMS:
-      helpers.toggleFavoriteFilm(query.from.id, query.id, action)
+      helpers.toggleFavouriteFilm(query.from.id, query.id, action)
       break;
     case ACTION_TYPE.SHOW_FILMS:
       console.log('SHOW_FILMS', action)

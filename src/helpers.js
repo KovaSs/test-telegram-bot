@@ -45,12 +45,30 @@ const helpers = {
   getFilm(filmId) {
     return models.Film.findOne({ uuid: filmId })
   },
+  /** Поиск фильма по chatId */
+  getFilmsList(searchParams) {
+    return models.Film.find({ uuid: searchParams })
+  },
   /** Получение UUID */
   getItemUUid(sorce) {
     return sorce.substr(2, sorce.length);
   },
+  /** Отображение списка фильмов добавленных в избранное */
+  showFavouriteFilms(chatId, userId) {
+    this.getUser(userId).then(async(user) => {
+      let html = 'Вы пока ничего не добавили';
+      if (user) {
+        await this.getFilmsList({'$in': user.films}).then(films => {
+          if (films.length) {
+            html = films.map((f, i) => `<b>${i+1}</b> ${f.name} <b>${f.rate}</b> - (/f${f.uuid})`).join('\n');
+          }
+        })
+      }
+      this.sendHTML(chatId, html, 'home');
+    })
+  },
   /** Добавление или удаление фильма в избранное */
-  toggleFavoriteFilm(userId, queryId, { filmUuid, isFav }) {
+  toggleFavouriteFilm(userId, queryId, { filmUuid, isFav }) {
     let userPromise;
     this.getUser(userId).then(user => {
       if (user) {
