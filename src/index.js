@@ -62,13 +62,13 @@ bot.on('callback_query', (query) => {
 
   switch (action.type) {
     case ACTION_TYPE.SHOW_CINEMAS:
-      console.log('SHOW_CINEMAS', action)
+      helpers.showCinemasByQuery(query.from.id, action.cinemaUuids)
       break;
     case ACTION_TYPE.SHOW_CINEMAS_MAP:
       console.log('SHOW_CINEMAS_MAP', action)
       break;
     case ACTION_TYPE.TOGGLE_FAV_FILMS:
-      helpers.toggleFavouriteFilm(query.from.id, query.id, action)
+      helpers.toggleFavouriteFilm(query.from.id, query.id, action);
       break;
     case ACTION_TYPE.SHOW_FILMS:
       console.log('SHOW_FILMS', action)

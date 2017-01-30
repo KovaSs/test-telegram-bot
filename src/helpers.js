@@ -49,9 +49,20 @@ const helpers = {
   getFilmsList(searchParams) {
     return models.Film.find({ uuid: searchParams })
   },
+  /** Поиск фильма по chatId */
+  getCinemaList(searchParams) {
+    return models.Cinema.find({ uuid: searchParams })
+  },
   /** Получение UUID */
   getItemUUid(sorce) {
     return sorce.substr(2, sorce.length);
+  },
+  /** Отображение списка кинотеатров в которых показывается фильм */
+  showCinemasByQuery(userId, cinemaUuids) {
+    this.getCinemaList({'$in': cinemaUuids}).then((cinemas) => {
+      const html = cinemas.map((c, i) => `<b>${i+1}</b> ${c.name} - (/c${c.uuid})`).join('\n');
+      this.sendHTML(userId, html, 'home');
+    })
   },
   /** Отображение списка фильмов добавленных в избранное */
   showFavouriteFilms(chatId, userId) {
@@ -148,8 +159,8 @@ const helpers = {
                 text: 'Показать на карте', 
                 callback_data: this.stringifyData({ 
                   type: ACTION_TYPE.SHOW_CINEMAS_MAP,
-                  lat: film.location.latitude,
-                  lot: film.location.longitude,
+                  lat: cinema.location.latitude,
+                  lot: cinema.location.longitude,
                 })
               },
             ],
