@@ -65,7 +65,7 @@ bot.on('callback_query', (query) => {
       helpers.showCinemasByQuery(query.from.id, action.cinemaUuids)
       break;
     case ACTION_TYPE.SHOW_CINEMAS_MAP:
-      console.log('SHOW_CINEMAS_MAP', action)
+      bot.sendLocation(query.message.chat.id, action.lat, action.lot)
       break;
     case ACTION_TYPE.TOGGLE_FAV_FILMS:
       helpers.toggleFavouriteFilm(query.from.id, query.id, action);
