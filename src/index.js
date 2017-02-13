@@ -58,20 +58,22 @@ bot.on('message', (msg) => {
 })
 
 bot.on('callback_query', (query) => {
-  const action = helpers.parseData(query.data)
+  const userId = query.from.id;
+  const action = helpers.parseData(query.data);
 
   switch (action.type) {
     case ACTION_TYPE.SHOW_CINEMAS:
-      helpers.showCinemasByQuery(query.from.id, action.cinemaUuids)
+      helpers.showCinemasByQuery(userId, action.cinemaUuids)
       break;
     case ACTION_TYPE.SHOW_CINEMAS_MAP:
       bot.sendLocation(query.message.chat.id, action.lat, action.lot)
       break;
     case ACTION_TYPE.TOGGLE_FAV_FILMS:
-      helpers.toggleFavouriteFilm(query.from.id, query.id, action);
+      helpers.toggleFavouriteFilm(userId, query.id, action);
       break;
     case ACTION_TYPE.SHOW_FILMS:
       console.log('SHOW_FILMS', action)
+      helpers.sendsFilmsByQuery(userId, {uuid:{'$in': action.filmsUuid}});
       break;
   }
 })
