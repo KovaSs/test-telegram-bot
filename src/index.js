@@ -78,6 +78,10 @@ bot.on('callback_query', (query) => {
   }
 })
 
+bot.on('inline_query', (query) => {
+  helpers.showFilmsInInlineSearch(query.id);
+})
+
 bot.onText(/\/start/, (msg) => {
   const chatId = helpers.getMessageChatId(msg);
   const text = `Здравствуйте, ${msg.from.first_name}\nВыберите команду для начала работы:`

@@ -53,6 +53,14 @@ const helpers = {
   getCinemaList(searchParams) {
     return models.Cinema.find({ uuid: searchParams })
   },
+  /** Создание описания к фильму */
+  createFilmCaption(film) {
+    return `Название: ${film.name}\n` + 
+      `Год: ${film.year}\n` +
+      `Рейтинг: ${film.rate}\n` +
+      `Длительность: ${film.length}\n` +
+      `Страна: ${film.country}\n`;
+  },
   /** Получение UUID */
   getItemUUid(sorce) {
     return sorce.substr(2, sorce.length);
@@ -62,6 +70,24 @@ const helpers = {
     this.getCinemaList({'$in': cinemaUuids}).then((cinemas) => {
       const html = cinemas.map((c, i) => `<b>${i+1}</b> ${c.name} - (/c${c.uuid})`).join('\n');
       this.sendHTML(userId, html, 'home');
+    })
+  },
+  /** Отображение списка кинотеатров в которых показывается фильм */
+  showFilmsInInlineSearch(queryId) {
+    models.Film.find({}).then((films) => {
+      const results = films.map(f => ({
+        id: f.uuid,
+        type: 'photo',
+        photo_url: f.picture,
+        thumb_url: f.picture,
+        caption: this.createFilmCaption(f),
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: `Кинопоиск ${f.name}`, url: f.url}]
+          ],
+        }
+      }));
+      bot.answerInlineQuery(queryId, results, {cache_time: 0})
     })
   },
   /** Отображение списка фильмов добавленных в избранное */
@@ -116,15 +142,8 @@ const helpers = {
 
         const isFavText = isFav ? 'Удалить из избранного' : 'Добавить в избранное';
 
-        const caption = 
-        `Название: ${film.name}\n` + 
-        `Год: ${film.year}\n` +
-        `Рейтинг: ${film.rate}\n` +
-        `Длительность: ${film.length}\n` +
-        `Страна: ${film.country}\n`;
-
         bot.sendPhoto(chatId, film.picture, {
-          caption,
+          caption: this.createFilmCaption(film),
           reply_markup: {
             inline_keyboard: [
               [
