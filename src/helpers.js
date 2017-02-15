@@ -82,9 +82,7 @@ const helpers = {
         thumb_url: f.picture,
         caption: this.createFilmCaption(f),
         reply_markup: {
-          inline_keyboard: [
-            [{ text: `Кинопоиск ${f.name}`, url: f.url}]
-          ],
+          inline_keyboard: [[{text: `Кинопоиск: ${f.name}`, url: f.link}]]
         }
       }));
       bot.answerInlineQuery(queryId, results, {cache_time: 0})
