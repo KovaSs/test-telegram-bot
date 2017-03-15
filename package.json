@@ -27,5 +27,8 @@
     "lodash": "^4.17.20",
     "mongoose": "^5.11.17",
     "node-telegram-bot-api": "^0.51.0"
+  },
+  "engines": {
+    "node": "^v14.15.5"
   }
 }
