@@ -1,4 +1,4 @@
-name: Start-creating-CI
+name: heroku-CI
 
 on:
   push:
