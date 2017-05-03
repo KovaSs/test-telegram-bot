@@ -1,10 +1,13 @@
 module.exports = {
   home: {
     films: 'Сейчас в кино',
-    favorite: 'Избранное',
-    cimenas: 'Кинотеатры',
+    favourite: 'Избранное',
+    cinemas: 'Кинотеатры'
   },
   film: {
-
+    random: 'Случайный жанр',
+    action: 'Боевик',
+    comedy: 'Комедия'
   },
+  back: 'Назад'
 }

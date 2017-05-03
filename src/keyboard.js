@@ -2,10 +2,12 @@ const kb = require('./keyboard-btns')
 
 module.exports = {
   home: [
-    [kb.home.films, kb.home.cimenas],
-    [kb.home.favorite],
+    [kb.home.films, kb.home.cinemas],
+    [kb.home.favourite]
   ],
-  film: [
-
-  ],
+  films: [
+    [kb.film.random],
+    [kb.film.action, kb.film.comedy],
+    [kb.back]
+  ]
 }
