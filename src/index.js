@@ -1,13 +1,22 @@
 const TelegramBot = require('node-telegram-bot-api');
+const mongoose = require('mongoose');
 const config = require('./config')
 const helpers = require('./helpers')
 const keyboard = require('./keyboard')
 const kb = require('./keyboard-btns')
+const models = require('./models')
 
 helpers.botStarted()
 
 /** Connecting for Mongo Database */
-require('./models')
+mongoose.connect(config.DB_URL, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+})
+.then(() => console.log('💾 Mongo DB. Connected...'))
+.catch((err) => console.log('❌Mongo DB. Error', err))
 
 const bot = new TelegramBot(config.TOKEN, {
   polling: true,
@@ -26,6 +35,15 @@ bot.on('message', (msg) => {
       break;
     case kb.home.cimenas:
       break;
+      case kb.film.action:
+        sendsFilmsByQuery(chatId, { type: 'action' });
+        break;
+      case kb.film.comedy:
+        sendsFilmsByQuery(chatId, { type: 'comedy' });
+        break;
+      case kb.film.random:
+        sendsFilmsByQuery(chatId, {});
+        break;
     case kb.back:
       bot.sendMessage(chatId, 'Что хотите посмотреть?', {
         reply_markup: { keyboard: keyboard.home }
@@ -41,3 +59,7 @@ bot.onText(/\/start/, (msg) => {
     reply_markup: { keyboard: keyboard.home }
   })
 })
+
+function sendsFilmsByQuery(chatId, query) {
+  models.Film.find(query).then(films => console.log('films', films))
+}

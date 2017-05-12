@@ -15,4 +15,4 @@ const FilmSchema = new Schema({
   cinemas: { type: [String], default: [] }
 })
 
-mongoose.model('films', FilmSchema)
+module.exports = mongoose.model('films', FilmSchema)
