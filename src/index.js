@@ -54,3 +54,9 @@ bot.onText(/\/start/, (msg) => {
     reply_markup: { keyboard: keyboard.home }
   })
 })
+
+bot.onText(/\/f(.+)/, (msg, [source, match]) => {
+  const chatId = helpers.getMessageChatId(msg);
+  const filmId = helpers.getItemUUid(source);
+  helpers.getFilmByUuid(chatId, filmId);
+})
