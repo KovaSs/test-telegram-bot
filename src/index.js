@@ -4,7 +4,6 @@ const config = require('./config')
 const helpers = require('./helpers')
 const keyboard = require('./keyboard')
 const kb = require('./keyboard-btns')
-const models = require('./models')
 const bot = require('./bot')
 
 /** Connecting for Mongo Database */
