@@ -27,7 +27,10 @@ bot.on('message', (msg) => {
       break;
     case kb.home.favorite:
       break;
-    case kb.home.cimenas:
+    case kb.home.cinemas:
+      bot.sendMessage(chatId, 'Отправьте местоположение', {
+        reply_markup: { keyboard: keyboard.cinemas }
+      })
       break;
       case kb.film.action:
         helpers.sendsFilmsByQuery(chatId, { type: 'action' });
@@ -43,6 +46,10 @@ bot.on('message', (msg) => {
         reply_markup: { keyboard: keyboard.home }
       })
       break;
+  }
+
+  if (msg.location) {
+    console.log('location', msg.location)
   }
 })
 
