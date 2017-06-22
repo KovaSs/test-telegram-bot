@@ -1,0 +1,6 @@
+- name: Create env file
+  run: |
+    touch .env
+    echo TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} >> .env
+    echo DB_URL=${{ secrets.DB_URL }} >> .env
+    cat .env
