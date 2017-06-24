@@ -2,9 +2,9 @@ name: Start-creating-CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   # This workflow contains a single job called "build"
