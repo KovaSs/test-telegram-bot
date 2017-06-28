@@ -17,9 +17,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Run a one-line script
-      run: ls
-
     # Runs a set of commands using the runners shell
     - name: Create env file
       run: |
@@ -27,6 +24,9 @@ jobs:
         echo TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} >> .env
         echo DB_URL=${{ secrets.DB_URL }} >> .env
         cat .env
+
+    - name: Run a one-line script
+      run: ls
 
     - uses: akhileshns/heroku-deploy@v3.11.10
       with:
