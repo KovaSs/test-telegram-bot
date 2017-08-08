@@ -34,8 +34,8 @@ jobs:
         heroku_email: ${{secrets.HEROKU_EMAIL}}
       env:
         NODE_ENV: production
-        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        DB_URL: ${{ secrets.DB_URL }}
+        HD_TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        HD_DB_URL: ${{ secrets.DB_URL }}
 
     - name: Check build files
       run: ls
