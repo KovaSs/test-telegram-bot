@@ -25,13 +25,16 @@ jobs:
         cat .env
 
     - name: Check build files
-      run: ls
+      run: ls -A
 
     - uses: akhileshns/heroku-deploy@v3.11.10
       with:
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
         heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
         heroku_email: ${{secrets.HEROKU_EMAIL}}
+        healthcheck: "https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com/health"
+        checkstring: "ok"
+        rollbackonhealthcheckfailed: true
       env:
         NODE_ENV: production
         HD_TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -39,5 +42,5 @@ jobs:
 
     - name: Check build files
       run: |
-        ls
-        echo env
+        ls -A
+        cat .env
