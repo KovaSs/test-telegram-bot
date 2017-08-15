@@ -32,11 +32,11 @@ jobs:
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
         heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
         heroku_email: ${{secrets.HEROKU_EMAIL}}
+        env_file: ".env"
         #healthcheck: "https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com/health"
         #checkstring: "ok"
         #rollbackonhealthcheckfailed: true
       env:
-        NODE_ENV: production
         HD_TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         HD_DB_URL: ${{ secrets.DB_URL }}
 
