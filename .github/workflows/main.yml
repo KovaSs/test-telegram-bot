@@ -20,8 +20,10 @@ jobs:
     - name: Create env file
       run: |
         touch .env
-        echo TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} >> .env
-        echo DB_URL=${{ secrets.DB_URL }} >> .env
+        {
+          echo TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}
+          echo DB_URL=${{ secrets.DB_URL }}
+        } > .env
         cat .env
 
     - name: Check build files
@@ -39,3 +41,6 @@ jobs:
       env:
         HD_TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         HD_DB_URL: ${{ secrets.DB_URL }}
+
+    - name: Check build files
+      run: ls -A
