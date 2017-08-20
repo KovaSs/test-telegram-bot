@@ -72,7 +72,6 @@ bot.on('callback_query', (query) => {
       helpers.toggleFavouriteFilm(userId, query.id, action);
       break;
     case ACTION_TYPE.SHOW_FILMS:
-      console.log('SHOW_FILMS', action)
       helpers.sendsFilmsByQuery(userId, {uuid:{'$in': action.filmsUuid}});
       break;
   }
