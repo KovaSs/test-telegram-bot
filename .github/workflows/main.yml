@@ -7,14 +7,10 @@ on:
     branches: [ main ]
 
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
     - name: Create env file
@@ -26,25 +22,9 @@ jobs:
         } > .env
         cat .env
 
-    - name: Check build files
-      run: |
-        ls -A
-        cat .env
-
     - uses: akhileshns/heroku-deploy@v3.11.10
       with:
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
         heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
         heroku_email: ${{secrets.HEROKU_EMAIL}}
         env_file: ".env"
-        #healthcheck: "https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com/health"
-        #checkstring: "ok"
-        #rollbackonhealthcheckfailed: true
-      env:
-        HD_TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        HD_DB_URL: ${{ secrets.DB_URL }}
-
-    - name: Check build files
-      run: |
-        ls -A
-        cat .env
