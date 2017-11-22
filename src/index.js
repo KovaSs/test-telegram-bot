@@ -1,4 +1,5 @@
 // const TelegramBot = require('node-telegram-bot-api');
+const express = require('express');
 const mongoose = require('mongoose');
 const config = require('./config')
 const helpers = require('./helpers')
@@ -6,6 +7,14 @@ const keyboard = require('./keyboard')
 const { ACTION_TYPE } = require('./constants')
 const kb = require('./keyboard-btns')
 const bot = require('./bot')
+
+// Server
+const app = express();
+app.use(express.static(__dirname + '/public'));
+app.use('/', function(req,res) {
+  res.sendFile(__dirname + '/index.html');
+})
+app.listen(process.env.PORT || 5000);
 
 /** Connecting for Mongo Database */
 mongoose.connect(config.DB_URL, {
@@ -17,6 +26,7 @@ mongoose.connect(config.DB_URL, {
 .then(() => console.log('💾 Mongo DB. Connected...'))
 .catch((err) => console.log('❌Mongo DB. Error', err))
 
+// Bot controllers
 bot.on('message', (msg) => {
   const chatId = helpers.getMessageChatId(msg);
   const userId = helpers.getMsgTelegramId(msg);
