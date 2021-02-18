@@ -1,0 +1,24 @@
+{
+  "name": "test_telegram_bot",
+  "version": "0.0.1",
+  "description": "My first telegram bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KovaSs/test_telegram_bot.git"
+  },
+  "author": "Den Isaev",
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/KovaSs/test_telegram_bot/issues"
+  },
+  "homepage": "https://github.com/KovaSs/test_telegram_bot#readme",
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.7"
+  }
+}
