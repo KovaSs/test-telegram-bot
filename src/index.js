@@ -79,7 +79,7 @@ bot.on('callback_query', (query) => {
       bot.sendLocation(query.message.chat.id, action.lat, action.lot)
       break;
     case ACTION_TYPE.TOGGLE_FAV_FILMS:
-      helpers.toggleFavouriteFilm(userId, query.id, action);
+      helpers.toggleFavouriteFilm(query.from, query.id, action);
       break;
     case ACTION_TYPE.SHOW_FILMS:
       helpers.sendsFilmsByQuery(userId, {uuid:{'$in': action.filmsUuid}});

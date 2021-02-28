@@ -103,9 +103,9 @@ const helpers = {
     })
   },
   /** Добавление или удаление фильма в избранное */
-  toggleFavouriteFilm(userId, queryId, { filmUuid, isFav }) {
+  toggleFavouriteFilm(userInfo, queryId, { filmUuid, isFav }) {
     let userPromise;
-    this.getUser(userId).then(user => {
+    this.getUser(userInfo.id).then(user => {
       if (user) {
         if (isFav) {
           user.films = user.films.filter(fUuid => fUuid !== filmUuid);
@@ -114,7 +114,13 @@ const helpers = {
         }
         userPromise = user;
       } else {
-        userPromise = new models.User({ telegramId: userId, films: [filmUuid]});
+        userPromise = new models.User({ 
+          telegramId: userInfo.id,
+          first_name: userInfo.first_name,
+          last_name: userInfo.last_name,
+          username: userInfo.username,
+          films: [filmUuid]
+        });
       }
       userPromise.save().then(() => {
         const answerText = isFav ? 'Удалено' : 'Добавлено';
